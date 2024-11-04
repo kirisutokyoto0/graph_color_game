@@ -62,27 +62,47 @@ const Graph = () => {
 
   const handleLevelChange = (newLevel) => {
     setLevel(newLevel);
-    setGraph(graphMaps[newLevel]);
-    setColors(Array(graphMaps[newLevel].length).fill(null));
+    const newGraph = graphMaps[newLevel];
+    setGraph(newGraph);
+    setColors(Array(newGraph.length).fill(null)); // Reset based on new graph length
     setResult('');
   };
 
+
   const handleColorChange = (index) => {
+    if (!selectedColor) {
+      alert('Please select a color first!'); // Alert user to select a color
+      return;
+    }
     const newColors = [...colors];
     newColors[index] = selectedColor;
     setColors(newColors);
   };
+  
 
   const handleSubmit = () => {
-    const uniqueColors = new Set(colors.filter((color) => color !== null));
-    if (uniqueColors.size > minColors) {
-      setResult('Wrong! Too many colors used.');
-    } else if (isValidColoring(graph, colors)) {
+    //const uniqueColors = new Set(colors.filter((color) => color !== null));
+    
+    if (isValidColoring(graph, colors)) {
       setResult('Correct! You colored the graph properly.');
     } else {
-      setResult('Wrong! Adjacent vertices share the same color.');
+      const conflicts = findConflicts(graph, colors);
+      setResult(`Wrong! Adjacent vertices ${conflicts.join(', ')} share the same color.`);
     }
   };
+
+  const findConflicts = (graph, colors) => {
+    const conflicts = [];
+    for (let i = 0; i < graph.length; i++) {
+      for (let j = 0; j < graph.length; j++) {
+        if (graph[i][j] === 1 && colors[i] === colors[j]) {
+          conflicts.push(`(${i}, ${j})`); // Collect conflicting vertex pairs
+        }
+      }
+    }
+    return conflicts;
+  };
+  
 
   const autoAnswer = () => {
     const autoColors = Array(graph.length).fill(null);
@@ -155,6 +175,14 @@ const Graph = () => {
         ))}
       </div>
 
+      <div className="action-buttons">
+        <button onClick={handleSubmit}>Submit Answer</button>
+        <button onClick={autoAnswer}>Auto Answer</button>
+        <button onClick={handleReset}>Reset</button>
+      </div>
+      
+      {result && <h3>{result}</h3>}
+
       {/* Adjusting SVG size dynamically */}
       <svg width={svgSize} height={svgSize} style={{ border: '1px solid black' }}>
         {graph.map((edges, i) =>
@@ -186,14 +214,6 @@ const Graph = () => {
           </circle>
         ))}
       </svg>
-
-      <div className="action-buttons">
-        <button onClick={handleSubmit}>Submit Answer</button>
-        <button onClick={autoAnswer}>Auto Answer</button>
-        <button onClick={handleReset}>Reset</button>
-      </div>
-
-      {result && <h3>{result}</h3>}
     </div>
   );
 };
@@ -231,12 +251,16 @@ const isValidColoring = (graph, colors) => {
   for (let i = 0; i < graph.length; i++) {
     for (let j = 0; j < graph.length; j++) {
       if (graph[i][j] === 1 && colors[i] === colors[j]) {
-        return false;
+        return false; // Found a conflict
       }
     }
   }
-  return true;
+  return true; // No conflicts found
 };
+
+
+
+
 
 const vertexPositions = (level) => {
   // Adjust positions based on level's graph size
@@ -252,9 +276,9 @@ const vertexPositions = (level) => {
       return [
         { x: 100, y: 100 },
         { x: 300, y: 100 },
-        { x: 100, y: 300 },
-        { x: 300, y: 300 },
-        { x: 200, y: 200 },
+        { x: 100, y: 350 },
+        { x: 300, y: 350 },
+        { x: 200, y: 350 },
       ];
     case 'hard':
       return [
@@ -262,29 +286,29 @@ const vertexPositions = (level) => {
         { x: 300, y: 100 },
         { x: 100, y: 300 },
         { x: 300, y: 300 },
-        { x: 200, y: 200 },
-        { x: 400, y: 300 },
+        { x: 300, y: 200 },
+        { x: 100, y: 200 },
       ];
     case 'hardcore':
       return [
-        { x: 100, y: 100 },
+        { x: 150, y: 100 },
         { x: 300, y: 100 },
-        { x: 100, y: 300 },
+        { x: 150, y: 300 },
         { x: 300, y: 300 },
-        { x: 200, y: 200 },
+        { x: 400, y: 100 },
         { x: 400, y: 300 },
         { x: 500, y: 200 },
       ];
     case 'nightmare':
       return [
-        { x: 100, y: 100 },
-        { x: 300, y: 100 },
-        { x: 100, y: 300 },
-        { x: 300, y: 300 },
-        { x: 200, y: 200 },
-        { x: 400, y: 300 },
-        { x: 500, y: 200 },
-        { x: 600, y: 400 },
+        { x: 100, y: 100 }, //0
+        { x: 250, y: 50 }, //1
+        { x: 100, y: 300 }, //2
+        { x: 450, y: 350 }, //3
+        { x: 250, y: 400 }, //4
+        { x: 400, y: 100 }, //5
+        { x: 500, y: 200 }, //6
+        { x: 600, y: 400 }, //7
       ];
     default:
       return [];
