@@ -36,17 +36,14 @@ const graphMaps = {
         [1, 0, 0, 0, 1, 1, 0],
     ],
     nightmare: [
-        [0, 1, 1, 0, 1, 0, 1, 0, 0],
-        [1, 0, 1, 1, 0, 1, 0, 0, 0],
-        [1, 1, 0, 1, 1, 0, 1, 0, 0],
-        [0, 1, 1, 0, 1, 1, 0, 1, 0],
-        [1, 0, 1, 1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 1, 0, 1, 0, 0],
-        [1, 0, 1, 0, 0, 1, 0, 1, 0],
-        [0, 0, 0, 1, 1, 0, 1, 0, 0],
-        [1, 0, 0, 0, 0, 0, 1, 1, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1, 0],
+        [0, 1, 1, 0, 1, 0, 1, 0],
+        [1, 0, 1, 1, 0, 1, 0, 0],
+        [1, 1, 0, 1, 1, 0, 1, 0],
+        [0, 1, 1, 0, 1, 1, 0, 1],
+        [1, 0, 1, 1, 0, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 1, 0],
+        [1, 0, 1, 0, 0, 1, 0, 1],
+        [0, 0, 0, 1, 1, 0, 1, 0],
     ],
 };
 
@@ -82,30 +79,46 @@ const Graph = () => {
     };
 
     const handleSubmit = () => {
-        //const uniqueColors = new Set(colors.filter((color) => color !== null));
-
-        if (isValidColoring(graph, colors)) {
+        //Check if the player uses only the minimum number of color
+        let colorisNULL = false;
+        let totalColorUsed = 0;
+        let uniqueColors = [];
+        colors.forEach((color) => {
+            if (color === null) colorisNULL = true;
+            if (color !== null && !uniqueColors.includes(color)) {
+                uniqueColors.push(color);
+                totalColorUsed += 1;
+            }
+        });
+        //If the player only uses the minimum number of colors
+        if (totalColorUsed !== calculateMinColors(graph)) {
+            setResult(`Please only use ${calculateMinColors(graph)} colors`);
+        } else if (colorisNULL) {
+            //if the player didn't color all the vertices
+            setResult(`Please fill in all the vertices with color.`);
+        } else if (isValidColoring(graph, colors)) {
+            //is the player did correctly colored all the vertices
             setResult("Correct! You colored the graph properly.");
         } else {
-            //const conflicts = findConflicts(graph, colors);
-
             setResult(
-                `Incorrect! Adjacent vertices that share the same color were found.`
+                `Wrong! Adjacent vertices 
+                  share the same color was found.`
             );
         }
     };
-    //For hints--- Don't delete
-    const findConflicts = (graph, colors) => {
-        const conflicts = [];
-        for (let i = 0; i < graph.length; i++) {
-            for (let j = 0; j < graph.length; j++) {
-                if (graph[i][j] === 1 && colors[i] === colors[j]) {
-                    conflicts.push(`(${i}, ${j})`); // Collect conflicting vertex pairs
-                }
-            }
-        }
-        return conflicts;
-    };
+
+    //-----|| Don't delete this function.....||
+    // const findConflicts = (graph, colors) => {
+    //     const conflicts = [];
+    //     for (let i = 0; i < graph.length; i++) {
+    //         for (let j = 0; j < graph.length; j++) {
+    //             if (graph[i][j] === 1 && colors[i] === colors[j]) {
+    //                 conflicts.push(`(${i}, ${j})`); // Collect conflicting vertex pairs
+    //             }
+    //         }
+    //     }
+    //     return conflicts;
+    // };
 
     const autoAnswer = () => {
         const autoColors = Array(graph.length).fill(null);
@@ -147,12 +160,10 @@ const Graph = () => {
     };
 
     // Set SVG size based on graph size
-    const svgSize = 100 + graph.length * 80; // 80px per vertex for padding
+    const svgSize = 0;
 
     return (
         <div className="graph-container">
-            <h2>Minimum Colors Needed: {minColors}</h2>
-
             <div className="level-buttons">
                 {["easy", "medium", "hard", "hardcore", "nightmare"].map(
                     (lvl) => (
@@ -166,6 +177,7 @@ const Graph = () => {
                     )
                 )}
             </div>
+            <p>Use [{minColors}] color's only</p>
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
@@ -228,7 +240,6 @@ const Graph = () => {
                             fontSize="12" // Adjust the font size as needed
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            pointerEvents="none"
                         >
                             {index} {/* or any text you want */}
                         </text>
@@ -269,13 +280,17 @@ const calculateMinColors = (graph) => {
 };
 
 const isValidColoring = (graph, colors) => {
-    for (let i = 0; i < graph.length; i++) {
-        for (let j = 0; j < graph.length; j++) {
-            if (graph[i][j] === 1 && colors[i] === colors[j]) {
-                return false; // Found a conflict
+    let colorUsed = [...new Set(colors)];
+    if (colorUsed.length === calculateMinColors(graph)) {
+        for (let i = 0; i < graph.length; i++) {
+            for (let j = 0; j < graph.length; j++) {
+                if (graph[i][j] === 1 && colors[i] === colors[j]) {
+                    return false; // Found a conflict
+                }
             }
         }
-    }
+    } else return false;
+
     return true; // No conflicts found
 };
 
@@ -318,17 +333,14 @@ const vertexPositions = (level) => {
             ];
         case "nightmare":
             return [
-                { x: 50, y: 100 - 50 }, //0
-                { x: 200, y: 25 }, //1
-                { x: 100, y: 300 - 50 }, //2
-                { x: 400, y: 350 - 50 }, //3
-                { x: 200, y: 400 - 50 }, //4
-                { x: 350, y: 100 - 50 }, //5
-                { x: 450, y: 150 - 50 }, //6
-                { x: 500, y: 400 - 50 }, //7
-                { x: 600, y: 380 - 50 }, //8
-                { x: 350, y: 500 - 50 }, //9
-                { x: 200, y: 500 - 50 }, //10
+                { x: 100, y: 100 }, //0
+                { x: 250, y: 50 }, //1
+                { x: 100, y: 300 }, //2
+                { x: 450, y: 350 }, //3
+                { x: 250, y: 400 }, //4
+                { x: 400, y: 100 }, //5
+                { x: 500, y: 200 }, //6
+                { x: 600, y: 400 }, //7
             ];
         default:
             return [];
