@@ -22,7 +22,7 @@ body {
   overflow: hidden; /* Prevents any unnecessary scroll */
   transition: background-color 0.3s ease;
 }
-
+ 
 /* App Container */
 #root {
   width: 90%;
@@ -69,6 +69,13 @@ button:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(228, 63, 90, 0.8);
 }
+
+button.active { /* Apply hover styles to active buttons */
+  background-color: #e43f5a;
+  color: #f0f0f0;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(228, 63, 90, 0.8);
+} 
 
 /* Game Title Header */
 h1 {
@@ -148,6 +155,14 @@ footer {
   box-shadow: 0 0 10px 5px rgba(228, 63, 90, 0.8); /* Glow effect */
   transform: scale(1.1); /* Slightly larger size on hover */
 }
+
+.color-swatch.selected {
+  box-shadow: 0 0 10px 5px rgba(228, 63, 90, 0.8); /* Glow effect */
+  
+}
+
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   body {
@@ -210,4 +225,14 @@ footer {
     width: 25px;
     height: 25px;
   }
+}
+
+
+svg {
+  background-color: rgba(240, 240, 240); /* 50% opacity */
+  border-radius: 15px;
+  height: 500px;
+  width: 650px;
+  margin-top: 10px;
+
 }

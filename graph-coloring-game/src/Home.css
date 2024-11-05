@@ -1,0 +1,29 @@
+.title {
+    font-size: 4rem;
+    color: #e43f5a;
+    text-shadow: 2px 2px #162447;
+    margin-bottom: 20px;
+    animation: glow 1.5s ease-in-out infinite alternate;
+    margin-bottom: 5rem;
+  }
+
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 600px; /* makes the container fill the viewport height */
+    text-align: center;
+}
+
+
+.home-buttons {
+    height: 60px;
+    width: 140px;
+    line-height: 1.5;
+    font-size: 12.5px;
+}
+
+.start-button {
+    font-size: 20px;
+}
