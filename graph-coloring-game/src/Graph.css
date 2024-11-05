@@ -1,24 +1,213 @@
-/* src/Graph.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* index.css */
+
+/* Universal Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #1a1a2e;
+  color: #f8f8ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ensures the body fits the viewport height */
+  margin: 0;
+  overflow: hidden; /* Prevents any unnecessary scroll */
+  transition: background-color 0.3s ease;
+}
+
+/* App Container */
+#root {
+  width: 90%;
+  max-width: 800px;
+  height: 90vh; /* Adjust height relative to the viewport */
+  overflow-y: auto; /* Allows internal scrolling if content overflows */
+  padding: 20px;
+  background: #162447;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  text-align: center;
+  color: #f0f8ff;
+  border: 2px solid #e43f5a;
+  position: relative;
+  animation: fadeIn 1s ease-in;
+}
+
+
+/* Animation for Fade-in Effect */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Button Styling */
+button {
+  font-family: 'Press Start 2P', cursive; /* Retro font style for consistency */
+  background-color: #1f4068;
+  color: #f8f8ff;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #e43f5a;
+  color: #f0f0f0;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(228, 63, 90, 0.8);
+}
+
+/* Game Title Header */
+h1 {
+  font-size: 2.5em;
+  color: #e43f5a;
+  text-shadow: 2px 2px #162447;
+  margin-bottom: 20px;
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+/* Glow Animation */
+@keyframes glow {
+  from { text-shadow: 0 0 5px #e43f5a, 0 0 10px #e43f5a, 0 0 20px #e43f5a; }
+  to { text-shadow: 0 0 20px #e43f5a, 0 0 30px #e43f5a, 0 0 40px #e43f5a; }
+}
+
+/* Card/Box Style */
+.card {
+  background-color: #1b1b2f;
+  border: 2px solid #1f4068;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  color: #eaeaea;
+}
+
+/* Interactive Elements */
+.card:hover {
+  background-color: #162447;
+  transform: scale(1.02);
+  border-color: #e43f5a;
+}
+
+/* Game Score Display */
+.score {
+  font-size: 1.2em;
+  color: #e43f5a;
+  margin-top: 15px;
+  text-shadow: 1px 1px #162447;
+}
+
+/* Footer or Additional Content */
+footer {
+  font-size: 0.8em;
+  color: #7d7d7d;
+  margin-top: 30px;
+}
+
+/* Graph Container */
 .graph-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 20px;
+}
+
+.color-palette {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.color-swatch {
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+  border: 2px solid #1a1a2e;
+  border-radius: 30%;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.color-swatch:hover {
+  box-shadow: 0 0 10px 5px rgba(228, 63, 90, 0.8); /* Glow effect */
+  transform: scale(1.1); /* Slightly larger size on hover */
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
   }
-  
-  .color-palette {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+
+  /* App Container */
+  #root {
+    max-width: 100%;
+    padding: 15px;
   }
-  
+
+  /* Header Font Size */
+  h1 {
+    font-size: 1.8em;
+  }
+
+  /* Button Padding & Font Size */
+  button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+
+  /* Card Padding */
+  .card {
+    padding: 10px;
+  }
+
+  /* Score Font Size */
+  .score {
+    font-size: 1em;
+  }
+
+  /* Color Swatch Size */
   .color-swatch {
-    width: 40px;
-    height: 40px;
-    margin: 0 5px;
-    border: 2px solid black;
-    cursor: pointer;
+    width: 30px;
+    height: 30px;
   }
-  
+}
+
+@media (max-width: 480px) {
+  /* Header Font Size */
+  h1 {
+    font-size: 1.5em;
+  }
+
+  /* Button Padding & Font Size */
+  button {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+
+  /* Score Font Size */
+  .score {
+    font-size: 0.9em;
+  }
+
+  /* Color Swatch Size */
+  .color-swatch {
+    width: 25px;
+    height: 25px;
+  }
+}

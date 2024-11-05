@@ -91,6 +91,10 @@ const Graph = () => {
     }
   };
 
+  const removeDuplicate = (graph) =>{
+    
+  }
+
   const findConflicts = (graph, colors) => {
     const conflicts = [];
     for (let i = 0; i < graph.length; i++) {
@@ -144,7 +148,7 @@ const Graph = () => {
   };
 
   // Set SVG size based on graph size
-  const svgSize = 100 + (graph.length * 80); // 80px per vertex for padding
+  const svgSize = (100 + (graph.length * 80))-graph.length*2; // 80px per vertex for padding
 
   return (
     <div className="graph-container">
@@ -201,8 +205,8 @@ const Graph = () => {
           )
         )}
         {vertexPositions(level).map((pos, index) => (
+          <g key={index}>
           <circle
-            key={index}
             cx={pos.x}
             cy={pos.y}
             r="20"
@@ -212,6 +216,17 @@ const Graph = () => {
           >
             <title>Vertex {index}</title>
           </circle>
+          <text
+            x={pos.x}
+            y={pos.y}
+            fill="black" // You can change the color as needed
+            fontSize="12" // Adjust the font size as needed
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            {index} {/* or any text you want */}
+          </text>
+        </g>
         ))}
       </svg>
     </div>
