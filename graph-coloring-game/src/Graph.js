@@ -10,6 +10,7 @@ const graphMaps = {
     [1, 0, 0, 1],
     [1, 0, 0, 1],
     [0, 1, 1, 0],
+
   ],
   medium: [
     [0, 1, 1, 0, 0],
@@ -36,14 +37,17 @@ const graphMaps = {
     [1, 0, 0, 0, 1, 1, 0],
   ],
   nightmare: [
-    [0, 1, 1, 0, 1, 0, 1, 0],
-    [1, 0, 1, 1, 0, 1, 0, 0],
-    [1, 1, 0, 1, 1, 0, 1, 0],
-    [0, 1, 1, 0, 1, 1, 0, 1],
-    [1, 0, 1, 1, 0, 1, 0, 1],
-    [0, 1, 0, 1, 1, 0, 1, 0],
-    [1, 0, 1, 0, 0, 1, 0, 1],
-    [0, 0, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 0, 1, 0, 1, 0, 0],
+    [1, 0, 1, 1, 0, 1, 0, 0, 0],
+    [1, 1, 0, 1, 1, 0, 1, 0, 0],
+    [0, 1, 1, 0, 1, 1, 0, 1, 0],
+    [1, 0, 1, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 1, 0, 1, 0, 0],
+    [1, 0, 1, 0, 0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 1, 0, 1, 0, 0],
+    [1, 0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 1, 0, 0, 1, 0],
   ],
 };
 
@@ -86,20 +90,18 @@ const Graph = () => {
     if (isValidColoring(graph, colors)) {
       setResult('Correct! You colored the graph properly.');
     } else {
-      const conflicts = findConflicts(graph, colors);
-      setResult(`Wrong! Adjacent vertices ${conflicts.join(', ')} share the same color.`);
+      //const conflicts = findConflicts(graph, colors);
+      
+      setResult(`Incorrect! Adjacent vertices that share the same color were found.`);
     }
   };
-
-  const removeDuplicate = (graph) =>{
-    
-  }
-
+  //For hints--- Don't delete
   const findConflicts = (graph, colors) => {
     const conflicts = [];
     for (let i = 0; i < graph.length; i++) {
       for (let j = 0; j < graph.length; j++) {
         if (graph[i][j] === 1 && colors[i] === colors[j]) {
+
           conflicts.push(`(${i}, ${j})`); // Collect conflicting vertex pairs
         }
       }
@@ -148,12 +150,11 @@ const Graph = () => {
   };
 
   // Set SVG size based on graph size
-  const svgSize = (100 + (graph.length * 80))-graph.length*2; // 80px per vertex for padding
+  const svgSize = (100 + (graph.length * 80)); // 80px per vertex for padding
 
   return (
     <div className="graph-container">
       <h1>Graph Coloring Game</h1>
-      <h2>Difficulty: {level}</h2>
       <h2>Minimum Colors Needed: {minColors}</h2>
 
       <div className="level-buttons">
@@ -180,8 +181,8 @@ const Graph = () => {
       </div>
 
       <div className="action-buttons">
-        <button onClick={handleSubmit}>Submit Answer</button>
-        <button onClick={autoAnswer}>Auto Answer</button>
+        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={autoAnswer}>Answer</button>
         <button onClick={handleReset}>Reset</button>
       </div>
       
@@ -223,6 +224,7 @@ const Graph = () => {
             fontSize="12" // Adjust the font size as needed
             textAnchor="middle"
             dominantBaseline="middle"
+            pointerEvents="none"
           >
             {index} {/* or any text you want */}
           </text>
@@ -316,14 +318,17 @@ const vertexPositions = (level) => {
       ];
     case 'nightmare':
       return [
-        { x: 100, y: 100 }, //0
+        { x: 150, y: 100 }, //0
         { x: 250, y: 50 }, //1
-        { x: 100, y: 300 }, //2
+        { x: 150, y: 300 }, //2
         { x: 450, y: 350 }, //3
         { x: 250, y: 400 }, //4
         { x: 400, y: 100 }, //5
-        { x: 500, y: 200 }, //6
+        { x: 500, y: 150 }, //6
         { x: 600, y: 400 }, //7
+        { x: 700, y: 380 }, //8
+        { x: 450, y: 500 }, //9
+        { x: 250, y: 500 }, //10
       ];
     default:
       return [];
