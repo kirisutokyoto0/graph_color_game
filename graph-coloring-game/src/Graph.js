@@ -39,19 +39,19 @@ const graphMaps = {
         [1, 0, 0, 0, 1, 1, 0],
     ],
     nightmare: [
-       //0  1  2  3  4  5  6  7  8  9  10 11
-        [0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0],//0
-        [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0],//1
-        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0],//2
-        [0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1],//3
-        [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0],//4
-        [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0],//5
-        [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],//6
-        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1],//7
-        [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1],//8
-        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],//9
-        [0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0],//10
-        [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],//11
+        //0  1  2  3  4  5  6  7  8  9  10 11
+        [0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0], //0
+        [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0], //1
+        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //2
+        [0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1], //3
+        [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0], //4
+        [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //5
+        [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1], //6
+        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1], //7
+        [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1], //8
+        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0], //9
+        [0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0], //10
+        [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], //11
     ],
 };
 
@@ -60,7 +60,7 @@ const Graph = () => {
     const [graph, setGraph] = useState(graphMaps[level]);
     const [colors, setColors] = useState(Array(graph.length).fill(null));
     const [result, setResult] = useState("");
-    const [selectedColor, setSelectedColor] = useState("");
+    const [selectedColor, setSelectedColor] = useState(null);
     const minColors = calculateMinColors(graph);
 
     const handleReset = () => {
@@ -91,21 +91,21 @@ const Graph = () => {
         let colorisNULL = false;
         let totalColorUsed = 0;
         let uniqueColors = [];
-        colors.forEach(color =>{
-            if(color === null) colorisNULL = true;
-            if(color !== null && !uniqueColors.includes(color)) {
+        colors.forEach((color) => {
+            if (color === null) colorisNULL = true;
+            if (color !== null && !uniqueColors.includes(color)) {
                 uniqueColors.push(color);
-                totalColorUsed+=1;
+                totalColorUsed += 1;
             }
         });
         //If the player only uses the minimum number of colors
-        if(totalColorUsed > calculateMinColors(graph)) {
+        if (totalColorUsed > calculateMinColors(graph)) {
             setResult(`Please use only ${calculateMinColors(graph)} colors`);
-        }
-        else if(colorisNULL) {//if the player didn't color all the vertices
+        } else if (colorisNULL) {
+            //if the player didn't color all the vertices
             setResult(`Please fill in all the vertices with color.`);
-        }
-        else if (isValidColoring(graph, colors)) {//is the player did correctly colored all the vertices
+        } else if (isValidColoring(graph, colors)) {
+            //is the player did correctly colored all the vertices
             setResult("Correct! You colored the graph properly.");
         } else {
             setResult(
@@ -159,9 +159,6 @@ const Graph = () => {
 
     return (
         <div className="graph-container">
-            <h2>Difficulty: {level}</h2>
-            <h2>Use [{minColors}] color's only</h2>
-
             <div className="level-buttons">
                 {["easy", "medium", "hard", "hardcore", "nightmare"].map(
                     (lvl) => (
@@ -175,12 +172,15 @@ const Graph = () => {
                     )
                 )}
             </div>
+            <p>Use [{minColors}] color's only</p>
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
                     <div
                         key={color}
-                        className="color-swatch"
+                        className={`color-swatch ${
+                            selectedColor === color ? "selected" : ""
+                        }`}
                         style={{ backgroundColor: color }}
                         onClick={() => setSelectedColor(color)}
                     />
@@ -236,7 +236,7 @@ const Graph = () => {
                             textAnchor="middle"
                             dominantBaseline="middle"
                             pointerEvents="none"
-                            style={{ userSelect: 'none' }}
+                            style={{ userSelect: "none" }}
                         >
                             {index} {/* or any text you want */}
                         </text>
@@ -278,13 +278,14 @@ const calculateMinColors = (graph) => {
 
 const isValidColoring = (graph, colors) => {
     for (let i = 0; i < graph.length; i++) {
-        for (let j = i + 1; j < graph.length; j++) { // Start from i+1 to avoid redundant checks
+        for (let j = i + 1; j < graph.length; j++) {
+            // Start from i+1 to avoid redundant checks
             if (graph[i][j] === 1 && colors[i] === colors[j]) {
                 return false; // Found a conflict
             }
         }
     }
-    
+
     return true; // No conflicts found
 };
 
