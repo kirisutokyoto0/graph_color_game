@@ -6,10 +6,13 @@ const colorsPalette = ["red", "blue", "green", "yellow", "orange", "purple"];
 // Graph maps for each level
 const graphMaps = {
     easy: [
-        [0, 1, 1, 0],
-        [1, 0, 0, 1],
-        [1, 0, 0, 1],
-        [0, 1, 1, 0],
+        [0, 1, 1, 0, 0, 1, 1],
+        [1, 0, 0, 1, 1, 1, 1],
+        [1, 0, 0, 1, 0, 1, 1],
+        [0, 1, 1, 0, 1, 1, 1],
+        [0, 1, 0, 1, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 1],
+        [1, 1, 1, 1, 0, 1, 0],
     ],
     medium: [
         [0, 1, 1, 0, 0],
@@ -36,14 +39,19 @@ const graphMaps = {
         [1, 0, 0, 0, 1, 1, 0],
     ],
     nightmare: [
-        [0, 1, 1, 0, 1, 0, 1, 0],
-        [1, 0, 1, 1, 0, 1, 0, 0],
-        [1, 1, 0, 1, 1, 0, 1, 0],
-        [0, 1, 1, 0, 1, 1, 0, 1],
-        [1, 0, 1, 1, 0, 1, 0, 1],
-        [0, 1, 0, 1, 1, 0, 1, 0],
-        [1, 0, 1, 0, 0, 1, 0, 1],
-        [0, 0, 0, 1, 1, 0, 1, 0],
+        //0  1  2  3  4  5  6  7  8  9  10 11
+        [0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0], //0
+        [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0], //1
+        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //2
+        [0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1], //3
+        [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0], //4
+        [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //5
+        [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1], //6
+        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1], //7
+        [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1], //8
+        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0], //9
+        [0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0], //10
+        [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], //11
     ],
 };
 
@@ -91,8 +99,8 @@ const Graph = () => {
             }
         });
         //If the player only uses the minimum number of colors
-        if (totalColorUsed !== calculateMinColors(graph)) {
-            setResult(`Please only use ${calculateMinColors(graph)} colors`);
+        if (totalColorUsed > calculateMinColors(graph)) {
+            setResult(`Please use only ${calculateMinColors(graph)} colors`);
         } else if (colorisNULL) {
             //if the player didn't color all the vertices
             setResult(`Please fill in all the vertices with color.`);
@@ -106,19 +114,6 @@ const Graph = () => {
             );
         }
     };
-
-    //-----|| Don't delete this function.....||
-    // const findConflicts = (graph, colors) => {
-    //     const conflicts = [];
-    //     for (let i = 0; i < graph.length; i++) {
-    //         for (let j = 0; j < graph.length; j++) {
-    //             if (graph[i][j] === 1 && colors[i] === colors[j]) {
-    //                 conflicts.push(`(${i}, ${j})`); // Collect conflicting vertex pairs
-    //             }
-    //         }
-    //     }
-    //     return conflicts;
-    // };
 
     const autoAnswer = () => {
         const autoColors = Array(graph.length).fill(null);
@@ -240,6 +235,8 @@ const Graph = () => {
                             fontSize="12" // Adjust the font size as needed
                             textAnchor="middle"
                             dominantBaseline="middle"
+                            pointerEvents="none"
+                            style={{ userSelect: "none" }}
                         >
                             {index} {/* or any text you want */}
                         </text>
@@ -280,16 +277,14 @@ const calculateMinColors = (graph) => {
 };
 
 const isValidColoring = (graph, colors) => {
-    let colorUsed = [...new Set(colors)];
-    if (colorUsed.length === calculateMinColors(graph)) {
-        for (let i = 0; i < graph.length; i++) {
-            for (let j = 0; j < graph.length; j++) {
-                if (graph[i][j] === 1 && colors[i] === colors[j]) {
-                    return false; // Found a conflict
-                }
+    for (let i = 0; i < graph.length; i++) {
+        for (let j = i + 1; j < graph.length; j++) {
+            // Start from i+1 to avoid redundant checks
+            if (graph[i][j] === 1 && colors[i] === colors[j]) {
+                return false; // Found a conflict
             }
         }
-    } else return false;
+    }
 
     return true; // No conflicts found
 };
@@ -303,6 +298,9 @@ const vertexPositions = (level) => {
                 { x: 300, y: 100 },
                 { x: 100, y: 300 },
                 { x: 300, y: 300 },
+                { x: 400, y: 200 },
+                { x: 200, y: 200 },
+                { x: 200, y: 400 },
             ];
         case "medium":
             return [
@@ -341,6 +339,10 @@ const vertexPositions = (level) => {
                 { x: 400, y: 100 }, //5
                 { x: 500, y: 200 }, //6
                 { x: 600, y: 400 }, //7
+                { x: 500, y: 400 }, //8
+                { x: 250, y: 210 }, //9
+                { x: 400, y: 470 }, //10
+                { x: 600, y: 270 }, //11
             ];
         default:
             return [];
