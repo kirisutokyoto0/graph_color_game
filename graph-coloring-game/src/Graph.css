@@ -70,6 +70,13 @@ button:hover {
   box-shadow: 0 0 15px rgba(228, 63, 90, 0.8);
 }
 
+button.active { /* Apply hover styles to active buttons */
+  background-color: #e43f5a;
+  color: #f0f0f0;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(228, 63, 90, 0.8);
+} 
+
 /* Game Title Header */
 h1 {
   font-size: 2.5em;
@@ -149,6 +156,12 @@ footer {
   transform: scale(1.1); /* Slightly larger size on hover */
 }
 
+.color-swatch.selected {
+  box-shadow: 0 0 10px 5px rgba(228, 63, 90, 0.8); /* Glow effect */
+  
+}
+
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {
@@ -220,5 +233,9 @@ svg {
   border-radius: 15px;
   height: 500px;
   width: 650px;
+  margin-top: 10px;
 
 }
+
+
+

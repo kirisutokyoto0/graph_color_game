@@ -36,14 +36,17 @@ const graphMaps = {
         [1, 0, 0, 0, 1, 1, 0],
     ],
     nightmare: [
-        [0, 1, 1, 0, 1, 0, 1, 0],
-        [1, 0, 1, 1, 0, 1, 0, 0],
-        [1, 1, 0, 1, 1, 0, 1, 0],
-        [0, 1, 1, 0, 1, 1, 0, 1],
-        [1, 0, 1, 1, 0, 1, 0, 1],
-        [0, 1, 0, 1, 1, 0, 1, 0],
-        [1, 0, 1, 0, 0, 1, 0, 1],
-        [0, 0, 0, 1, 1, 0, 1, 0],
+        [0, 1, 1, 0, 1, 0, 1, 0, 0],
+        [1, 0, 1, 1, 0, 1, 0, 0, 0],
+        [1, 1, 0, 1, 1, 0, 1, 0, 0],
+        [0, 1, 1, 0, 1, 1, 0, 1, 0],
+        [1, 0, 1, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 1, 0, 1, 0, 0],
+        [1, 0, 1, 0, 0, 1, 0, 1, 0],
+        [0, 0, 0, 1, 1, 0, 1, 0, 0],
+        [1, 0, 0, 0, 0, 0, 1, 1, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1, 0],
     ],
 };
 
@@ -52,7 +55,7 @@ const Graph = () => {
     const [graph, setGraph] = useState(graphMaps[level]);
     const [colors, setColors] = useState(Array(graph.length).fill(null));
     const [result, setResult] = useState("");
-    const [selectedColor, setSelectedColor] = useState("");
+    const [selectedColor, setSelectedColor] = useState(null);
     const minColors = calculateMinColors(graph);
 
     const handleReset = () => {
@@ -84,17 +87,14 @@ const Graph = () => {
         if (isValidColoring(graph, colors)) {
             setResult("Correct! You colored the graph properly.");
         } else {
-            const conflicts = findConflicts(graph, colors);
+            //const conflicts = findConflicts(graph, colors);
+
             setResult(
-                `Wrong! Adjacent vertices ${conflicts.join(
-                    ", "
-                )} share the same color.`
+                `Incorrect! Adjacent vertices that share the same color were found.`
             );
         }
     };
-
-    const removeDuplicate = (graph) => {};
-
+    //For hints--- Don't delete
     const findConflicts = (graph, colors) => {
         const conflicts = [];
         for (let i = 0; i < graph.length; i++) {
@@ -147,11 +147,10 @@ const Graph = () => {
     };
 
     // Set SVG size based on graph size
-    const svgSize = 0;
+    const svgSize = 100 + graph.length * 80; // 80px per vertex for padding
 
     return (
         <div className="graph-container">
-            <h2>Difficulty: {level}</h2>
             <h2>Minimum Colors Needed: {minColors}</h2>
 
             <div className="level-buttons">
@@ -172,7 +171,9 @@ const Graph = () => {
                 {colorsPalette.map((color) => (
                     <div
                         key={color}
-                        className="color-swatch"
+                        className={`color-swatch ${
+                            selectedColor === color ? "selected" : ""
+                        }`}
                         style={{ backgroundColor: color }}
                         onClick={() => setSelectedColor(color)}
                     />
@@ -180,8 +181,8 @@ const Graph = () => {
             </div>
 
             <div className="action-buttons">
-                <button onClick={handleSubmit}>Submit Answer</button>
-                <button onClick={autoAnswer}>Auto Answer</button>
+                <button onClick={handleSubmit}>Submit</button>
+                <button onClick={autoAnswer}>Answer</button>
                 <button onClick={handleReset}>Reset</button>
             </div>
 
@@ -227,6 +228,7 @@ const Graph = () => {
                             fontSize="12" // Adjust the font size as needed
                             textAnchor="middle"
                             dominantBaseline="middle"
+                            pointerEvents="none"
                         >
                             {index} {/* or any text you want */}
                         </text>
@@ -316,14 +318,17 @@ const vertexPositions = (level) => {
             ];
         case "nightmare":
             return [
-                { x: 100, y: 100 }, //0
-                { x: 250, y: 50 }, //1
-                { x: 100, y: 300 }, //2
-                { x: 450, y: 350 }, //3
-                { x: 250, y: 400 }, //4
-                { x: 400, y: 100 }, //5
-                { x: 500, y: 200 }, //6
-                { x: 600, y: 400 }, //7
+                { x: 50, y: 100 - 50 }, //0
+                { x: 200, y: 25 }, //1
+                { x: 100, y: 300 - 50 }, //2
+                { x: 400, y: 350 - 50 }, //3
+                { x: 200, y: 400 - 50 }, //4
+                { x: 350, y: 100 - 50 }, //5
+                { x: 450, y: 150 - 50 }, //6
+                { x: 500, y: 400 - 50 }, //7
+                { x: 600, y: 380 - 50 }, //8
+                { x: 350, y: 500 - 50 }, //9
+                { x: 200, y: 500 - 50 }, //10
             ];
         default:
             return [];
