@@ -79,15 +79,30 @@ const Graph = () => {
     };
 
     const handleSubmit = () => {
-        //const uniqueColors = new Set(colors.filter((color) => color !== null));
-
-        if (isValidColoring(graph, colors)) {
+        //Check if the player uses only the minimum number of color
+        let colorisNULL = false;
+        let totalColorUsed = 0;
+        let uniqueColors = [];
+        colors.forEach(color =>{
+            if(color === null) colorisNULL = true;
+            if(color !== null && !uniqueColors.includes(color)) {
+                uniqueColors.push(color);
+                totalColorUsed+=1;
+            }
+        });
+        //If the player only uses the minimum number of colors
+        if(totalColorUsed !== calculateMinColors(graph)) {
+            setResult(`Please only use ${calculateMinColors(graph)} colors`);
+        }
+        else if(colorisNULL) {//if the player didn't color all the vertices
+            setResult(`Please fill in all the vertices with color.`);
+        }
+        else if (isValidColoring(graph, colors)) {//is the player did correctly colored all the vertices
             setResult("Correct! You colored the graph properly.");
         } else {
-            //const conflicts = findConflicts(graph, colors);
             setResult(
                 `Wrong! Adjacent vertices 
-                  share the same color.`
+                  share the same color was found.`
             );
         }
     };
@@ -178,8 +193,8 @@ const Graph = () => {
             </div>
 
             <div className="action-buttons">
-                <button onClick={handleSubmit}>Submit Answer</button>
-                <button onClick={autoAnswer}>Auto Answer</button>
+                <button onClick={handleSubmit}>Submit</button>
+                <button onClick={autoAnswer}>Answer</button>
                 <button onClick={handleReset}>Reset</button>
             </div>
 
