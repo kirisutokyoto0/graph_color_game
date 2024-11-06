@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 import "./Graph.css";
 
-const colorsPalette = ["red", "blue", "green", "yellow", "orange", "purple"];
+const colorsPalette = ["red", "blue", "green", "yellow", "orange", "purple", null];
 
 // Graph maps for each level
 const graphMaps = {
     easy: [
-        [0, 1, 1, 0, 0, 1, 1],
-        [1, 0, 0, 1, 1, 1, 1],
-        [1, 0, 0, 1, 0, 1, 1],
-        [0, 1, 1, 0, 1, 1, 1],
-        [0, 1, 0, 1, 0, 0, 0],
-        [1, 1, 1, 1, 0, 0, 1],
-        [1, 1, 1, 1, 0, 1, 0],
+        [0, 1, 1, 0, 0, 1, 1],//0
+        [1, 0, 0, 1, 1, 1, 1],//1
+        [1, 0, 0, 1, 0, 1, 1],//2
+        [0, 1, 1, 0, 1, 1, 1],//3
+        [0, 1, 0, 1, 0, 0, 0],//4
+        [1, 1, 1, 1, 0, 0, 1],//5
+        [1, 1, 1, 1, 0, 1, 0],//6
     ],
     medium: [
-        [0, 1, 1, 0, 0],
-        [1, 0, 1, 1, 0],
-        [1, 1, 0, 0, 1],
-        [0, 1, 0, 0, 1],
-        [0, 0, 1, 1, 0],
+        //[0, 0, 0, 0, 0, 0, 0, 0], //6
+        [0, 1, 1, 0, 0, 0, 0, 0], //0
+        [1, 0, 1, 1, 0, 0, 0, 0], //1
+        [1, 1, 0, 0, 1, 1, 1, 0], //2
+        [0, 1, 0, 0, 1, 0, 1, 0], //3
+        [0, 0, 1, 1, 0, 1, 0, 0], //4
+        [0, 0, 1, 0, 1, 0, 1, 1], //5
+        [0, 0, 1, 1, 0, 1, 0, 1], //6
+        [0, 0, 0, 0, 0, 1, 1, 0], //7
     ],
     hard: [
         [0, 1, 0, 1, 0, 0],
@@ -53,6 +57,69 @@ const graphMaps = {
         [0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0],//10
         [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],//11
     ],
+};
+
+const vertexPositions = (level) => {
+    // Adjust positions based on level's graph size
+    switch (level) {
+        case "easy":
+            return [
+                { x: 100, y: 100 },
+                { x: 300, y: 100 },
+                { x: 100, y: 300 },
+                { x: 300, y: 300 },
+                { x: 400, y: 200 },
+                { x: 200, y: 200 },
+                { x: 200, y: 400 },
+            ];
+        case "medium":
+            return [
+                { x: 100, y: 100 }, //0
+                { x: 300, y: 100 }, //1
+                { x: 100, y: 350 }, //2
+                { x: 300, y: 350 }, //3
+                { x: 200, y: 350 }, //4
+                { x: 150, y: 170 }, //5
+                { x: 245, y: 280 }, //6
+                { x: 400, y: 225 }, //7
+            ];
+        case "hard":
+            return [
+                { x: 100, y: 100 },
+                { x: 300, y: 100 },
+                { x: 100, y: 300 },
+                { x: 300, y: 300 },
+                { x: 300, y: 200 },
+                { x: 100, y: 200 },
+            ];
+        case "hardcore":
+            return [
+                { x: 150, y: 100 },
+                { x: 300, y: 100 },
+                { x: 150, y: 300 },
+                { x: 300, y: 300 },
+                { x: 400, y: 100 },
+                { x: 400, y: 300 },
+                { x: 500, y: 200 },
+            ];
+        case "nightmare":
+            return [
+                { x: 100, y: 100 }, //0
+                { x: 250, y: 50 }, //1
+                { x: 100, y: 300 }, //2
+                { x: 450, y: 350 }, //3
+                { x: 250, y: 400 }, //4
+                { x: 400, y: 100 }, //5
+                { x: 500, y: 200 }, //6
+                { x: 600, y: 400 }, //7
+                { x: 500, y: 400 }, //8
+                { x: 250, y: 210 }, //9
+                { x: 400, y: 470 }, //10
+                { x: 600, y: 270 }, //11
+            ];
+        default:
+            return [];
+    }
 };
 
 const Graph = () => {
@@ -92,7 +159,7 @@ const Graph = () => {
         let totalColorUsed = 0;
         let uniqueColors = [];
         colors.forEach(color =>{
-            if(color === null) colorisNULL = true;
+            if(color === null || color === 'white') colorisNULL = true;
             if(color !== null && !uniqueColors.includes(color)) {
                 uniqueColors.push(color);
                 totalColorUsed+=1;
@@ -178,12 +245,25 @@ const Graph = () => {
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
-                    <div
-                        key={color}
-                        className="color-swatch"
-                        style={{ backgroundColor: color }}
-                        onClick={() => setSelectedColor(color)}
-                    />
+                <div
+                    key={color || 'clear'}
+                    className="color-swatch"
+                    style={{ backgroundColor: color ? color : 'white', position: 'relative' }}
+                    onClick={() => setSelectedColor(color || 'white')}
+                >
+                    {!color && (
+                        <span style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            color: '#000',
+                            fontWeight: 'bold'
+                        }}>
+                            X
+                        </span>
+                    )}
+                </div>
                 ))}
             </div>
 
@@ -288,64 +368,6 @@ const isValidColoring = (graph, colors) => {
     return true; // No conflicts found
 };
 
-const vertexPositions = (level) => {
-    // Adjust positions based on level's graph size
-    switch (level) {
-        case "easy":
-            return [
-                { x: 100, y: 100 },
-                { x: 300, y: 100 },
-                { x: 100, y: 300 },
-                { x: 300, y: 300 },
-                { x: 400, y: 200 },
-                { x: 200, y: 200 },
-                { x: 200, y: 400 },
-            ];
-        case "medium":
-            return [
-                { x: 100, y: 100 },
-                { x: 300, y: 100 },
-                { x: 100, y: 350 },
-                { x: 300, y: 350 },
-                { x: 200, y: 350 },
-            ];
-        case "hard":
-            return [
-                { x: 100, y: 100 },
-                { x: 300, y: 100 },
-                { x: 100, y: 300 },
-                { x: 300, y: 300 },
-                { x: 300, y: 200 },
-                { x: 100, y: 200 },
-            ];
-        case "hardcore":
-            return [
-                { x: 150, y: 100 },
-                { x: 300, y: 100 },
-                { x: 150, y: 300 },
-                { x: 300, y: 300 },
-                { x: 400, y: 100 },
-                { x: 400, y: 300 },
-                { x: 500, y: 200 },
-            ];
-        case "nightmare":
-            return [
-                { x: 100, y: 100 }, //0
-                { x: 250, y: 50 }, //1
-                { x: 100, y: 300 }, //2
-                { x: 450, y: 350 }, //3
-                { x: 250, y: 400 }, //4
-                { x: 400, y: 100 }, //5
-                { x: 500, y: 200 }, //6
-                { x: 600, y: 400 }, //7
-                { x: 500, y: 400 }, //8
-                { x: 250, y: 210 }, //9
-                { x: 400, y: 470 }, //10
-                { x: 600, y: 270 }, //11
-            ];
-        default:
-            return [];
-    }
-};
+
 
 export default Graph;
