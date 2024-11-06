@@ -66,5 +66,3 @@ The clock is ticking, and the challenge awaits! Dive in and show your coloring s
 Good luck, and most importantly – **have fun!** 🧠🎨
 
 ---
-
-This updated version should now reflect that the player won’t receive any alerts about conflicts, and they must carefully check for conflicts themselves as they play. It keeps the game challenging and encourages the player to be more mindful of their moves. Let me know if there's anything else you'd like to adjust! 😊
