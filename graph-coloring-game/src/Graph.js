@@ -184,8 +184,8 @@ const Graph = () => {
     const handleSubmit = () => {
         //Check if the player uses only the minimum number of color
         let colorisNULL = false;
-        let totalColorUsed = 0;
         let uniqueColors = [];
+        let totalColorUsed = 0;
 
         colors.forEach((color) => {
             if (color === null || color === 'white') colorisNULL = true;
@@ -240,7 +240,17 @@ const Graph = () => {
                 }
             }
         }
-    
+
+        let totalColorUsed = 0;
+        let uniqueColors = [];
+
+        colors.forEach((color) => {
+            if (color !== null && !uniqueColors.includes(color)) {
+                uniqueColors.push(color);
+                if(color !== 'white' || color !== null) totalColorUsed += 1;
+            }
+        });
+        
         // Convert Set to array to sort and display unique conflicts only
         let conflictingVertices = Array.from(conflicts).sort();
         if(allNull === graph.length){
@@ -249,7 +259,12 @@ const Graph = () => {
         else if (conflictingVertices.length) {
             setResult(`You have a mistake at vertices: ${conflictingVertices.join(', ')}`);
             handleHintsClicks();
-        } else {
+        }
+        else if (totalColorUsed > calculateMinColors(graph)) {
+            setResult(`You have used ${totalColorUsed} colors, exceeding the maximum limit of ${calculateMinColors(graph)} colors.`);
+            handleHintsClicks();
+        }
+        else {
             setResult(`You are on the right track!`);
         }
     };
