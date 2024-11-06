@@ -20,6 +20,13 @@ const graphMaps = {
         [0, 1, 0, 1, 0, 0, 0], //4
         [1, 1, 1, 1, 0, 0, 1], //5
         [1, 1, 1, 1, 0, 1, 0], //6
+        [0, 1, 1, 0, 0, 1, 1], //0
+        [1, 0, 0, 1, 1, 1, 1], //1
+        [1, 0, 0, 1, 0, 1, 1], //2
+        [0, 1, 1, 0, 1, 1, 1], //3
+        [0, 1, 0, 1, 0, 0, 0], //4
+        [1, 1, 1, 1, 0, 0, 1], //5
+        [1, 1, 1, 1, 0, 1, 0], //6
     ],
     medium: [
         [0, 1, 1, 0, 0, 0, 0, 0, 0], //0
@@ -324,6 +331,34 @@ const Graph = () => {
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
+                    <div
+                        key={color || "clear"}
+                        className={`color-swatch ${
+                            selectedColor === color ? "selected" : ""
+                        }`}
+                        style={{
+                            backgroundColor: color ? color : "white",
+                            position: "relative",
+                        }}
+                        onClick={() => setSelectedColor(color || "white")}
+                    >
+                        {!color && (
+                            <span
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    color: "#000",
+                                    fontWeight: "bold",
+                                    userSelect: "none",
+                                    pointerEvents: "none",
+                                }}
+                            >
+                                X
+                            </span>
+                        )}
+                    </div>
                     <div
                         key={color || "clear"}
                         className={`color-swatch ${
