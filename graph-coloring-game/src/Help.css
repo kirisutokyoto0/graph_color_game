@@ -1,0 +1,81 @@
+
+
+.how-to-play-container {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.back-button {
+  margin-bottom: 10px;
+}
+
+.context {
+  padding: 20px;
+}
+
+.help-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.intro-text, .section-content {
+  font-size: 12px;
+  margin-bottom: 10px;
+  line-height: 1.75;
+
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.instructions-list {
+  padding-left: 50px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.75;
+
+
+}
+
+
+.instructions-list li {
+  margin-bottom: 15px;
+}
+
+.instructions-list ul {
+  list-style-type: circle;
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+.rounded {
+  border-radius: 5px;
+}
+
+
+.tips {
+  text-align: left;
+  padding-left: 25px;
+  font-size: 12px;
+  margin-bottom: 10px;
+  line-height: 1.75;
+
+}
+
+.tips li {
+  margin-bottom: 15px;
+}
+
+

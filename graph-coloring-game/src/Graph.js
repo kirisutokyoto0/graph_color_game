@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Graph.css";
+import { Link } from "react-router-dom";
 
 const colorsPalette = [
     "#D7263D",
@@ -33,32 +34,32 @@ const graphMaps = {
         [0, 1, 0, 1, 0, 0, 0, 0, 0], //8
     ],
     hard: [
-        [0, 1, 0, 1, 0, 1, 0, 0, 0, 0],//0
-        [1, 0, 1, 0, 1, 0, 1, 1, 0, 0],//1
-        [0, 1, 0, 0, 0, 1, 0, 0, 1, 0],//2
-        [1, 0, 0, 0, 1, 0, 1, 1, 1, 1],//3
-        [0, 1, 0, 1, 0, 1, 1, 1, 1, 1],//4
-        [1, 0, 1, 0, 1, 0, 0, 0, 1, 0],//5
-        [0, 1, 0, 1, 1, 0, 0, 1, 0, 0],//6
-        [0, 1, 0, 1, 1, 0, 1, 0, 0, 1],//7
-        [0, 0, 1, 1, 1, 1, 0, 0, 0, 1],//8
-        [0, 0, 0, 1, 1, 0, 0, 1, 1, 0],//9
+        [0, 1, 0, 1, 0, 1, 0, 0, 0, 0], //0
+        [1, 0, 1, 0, 1, 0, 1, 1, 0, 0], //1
+        [0, 1, 0, 0, 0, 1, 0, 0, 1, 0], //2
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 1], //3
+        [0, 1, 0, 1, 0, 1, 1, 1, 1, 1], //4
+        [1, 0, 1, 0, 1, 0, 0, 0, 1, 0], //5
+        [0, 1, 0, 1, 1, 0, 0, 1, 0, 0], //6
+        [0, 1, 0, 1, 1, 0, 1, 0, 0, 1], //7
+        [0, 0, 1, 1, 1, 1, 0, 0, 0, 1], //8
+        [0, 0, 0, 1, 1, 0, 0, 1, 1, 0], //9
     ],
     hardcore: [
-        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],//0
-        [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],//1
-        [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],//2
-        [0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0],//3
-        [0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0],//4
-        [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0],//5
-        [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0],//6
-        [0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0],//7
-        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],//8
-        [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],//9
-        [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],//10
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1], //0
+        [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1], //1
+        [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], //2
+        [0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0], //3
+        [0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0], //4
+        [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0], //5
+        [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0], //6
+        [0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //7
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], //8
+        [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], //9
+        [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], //10
     ],
     nightmare: [
-       //0  1  2  3  4  5  6  7  8  9  10 11 12
+        //0  1  2  3  4  5  6  7  8  9  10 11 12
         [0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0], //0
         [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0], //1
         [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1], //2
@@ -102,30 +103,30 @@ const vertexPositions = (level) => {
             ];
         case "hard":
             return [
-                { x: 150, y: 80 },//0
-                { x: 350, y: 80 },//1
-                { x: 150, y: 280 },//2
-                { x: 350, y: 280 },//3
-                { x: 350, y: 180 },//4
-                { x: 150, y: 180 },//5
-                { x: 450, y: 130 },//6
-                { x: 450, y: 230 },//7
-                { x: 250, y: 380 },//8
-                { x: 550, y: 380 },//9
+                { x: 150, y: 80 }, //0
+                { x: 350, y: 80 }, //1
+                { x: 150, y: 280 }, //2
+                { x: 350, y: 280 }, //3
+                { x: 350, y: 180 }, //4
+                { x: 150, y: 180 }, //5
+                { x: 450, y: 130 }, //6
+                { x: 450, y: 230 }, //7
+                { x: 250, y: 380 }, //8
+                { x: 550, y: 380 }, //9
             ];
         case "hardcore":
             return [
-                { x: 120, y: 90 },//0
-                { x: 320, y: 90 },//1
-                { x: 170, y: 290 },//2
-                { x: 320, y: 290 },//3
-                { x: 420, y: 90 },//4
-                { x: 420, y: 290 },//5
-                { x: 520, y: 190 },//6
-                { x: 245, y: 440 },//7
-                { x: 470, y: 440 },//8
-                { x: 520, y: 70 },//9
-                { x: 190, y: 160 },//10
+                { x: 120, y: 90 }, //0
+                { x: 320, y: 90 }, //1
+                { x: 170, y: 290 }, //2
+                { x: 320, y: 290 }, //3
+                { x: 420, y: 90 }, //4
+                { x: 420, y: 290 }, //5
+                { x: 520, y: 190 }, //6
+                { x: 245, y: 440 }, //7
+                { x: 470, y: 440 }, //8
+                { x: 520, y: 70 }, //9
+                { x: 190, y: 160 }, //10
             ];
         case "nightmare":
             return [
@@ -154,8 +155,8 @@ const Graph = () => {
     const [colors, setColors] = useState(Array(graph.length).fill(null));
     const [result, setResult] = useState("");
     const [selectedColor, setSelectedColor] = useState(null);
-    const [hintsClicked, setHintsClicked] = useState(0); 
-    const [answerClicked, setAnswerClicked] = useState(0); 
+    const [hintsClicked, setHintsClicked] = useState(0);
+    const [answerClicked, setAnswerClicked] = useState(0);
     const minColors = calculateMinColors(graph);
 
     const handleReset = () => {
@@ -188,10 +189,13 @@ const Graph = () => {
         let totalColorUsed = 0;
 
         colors.forEach((color) => {
-            if (color === null || color === 'white') colorisNULL = true;
-            if (color !== null && !uniqueColors.includes(color)) {
+            if (
+                color !== null &&
+                color !== "white" &&
+                !uniqueColors.includes(color)
+            ) {
                 uniqueColors.push(color);
-                if(color !== 'white') totalColorUsed += 1;
+                totalColorUsed += 1;
             }
         });
         //If the player only uses the minimum number of colors
@@ -223,7 +227,7 @@ const Graph = () => {
     };
 
     const handleHints = () => {
-        if (hintsClicked === 2){
+        if (hintsClicked === 2) {
             handleAnswerClicks();
             resetHintsClicks();
         }
@@ -231,10 +235,15 @@ const Graph = () => {
         let conflicts = new Set();
         let allNull = 0;
         for (let i = 0; i < graph.length; i++) {
-            if(colors[i] === 'white' || colors[i] === null) allNull+=1;
+            if (colors[i] === "white" || colors[i] === null) allNull += 1;
             for (let j = i + 1; j < graph.length; j++) {
                 // Start from i+1 to avoid redundant checks
-                if (graph[i][j] === 1 && colors[i] === colors[j] && (colors[i] !== null && colors[i] !== 'white')) {
+                if (
+                    graph[i][j] === 1 &&
+                    colors[i] === colors[j] &&
+                    colors[i] !== null &&
+                    colors[i] !== "white"
+                ) {
                     conflicts.add(i); // Add only the index of the conflicting vertex
                     conflicts.add(j); // Add the other index of the conflicting vertex
                 }
@@ -250,28 +259,29 @@ const Graph = () => {
                 totalColorUsed += 1;
             }
         });
-        
+
         // Convert Set to array to sort and display unique conflicts only
         let conflictingVertices = Array.from(conflicts).sort();
-        if(allNull === graph.length){
+        if (allNull === graph.length) {
             setResult(`You haven't started yet.`);
-        }
-        else if (conflictingVertices.length) {
-            setResult(`You have a mistake at vertices: ${conflictingVertices.join(', ')}`);
+        } else if (conflictingVertices.length) {
+            setResult(
+                `You have a mistake at vertices: ${conflictingVertices.join(
+                    ", "
+                )}`
+            );
             handleHintsClicks();
-        }
-        else if (totalColorUsed > calculateMinColors(graph)) {
-            setResult(`You have used ${totalColorUsed} colors, exceeding the maximum limit of ${calculateMinColors(graph)} colors.`);
+        } else if (totalColorUsed > calculateMinColors(graph)) {
+            setResult(
+                `You have used ${totalColorUsed} colors, exceeding the maximum limit of ${calculateMinColors(
+                    graph
+                )} colors.`
+            );
             handleHintsClicks();
-        }
-        else {
+        } else {
             setResult(`You are on the right track!`);
         }
     };
-    
-    
-
-
 
     const colorGraph = (autoColors, vertexIndex) => {
         if (vertexIndex === graph.length) {
@@ -302,22 +312,26 @@ const Graph = () => {
         return true;
     };
     const handleHintsClicks = () => {
-        setHintsClicked(prev => prev + 1); // Increment the hintsClicked counter
+        setHintsClicked((prev) => prev + 1); // Increment the hintsClicked counter
         // Your logic for hints here
     };
 
-    const handleAnswerClicks = () =>{
-        setAnswerClicked(prev => prev === 0? 1:0);
-    }
+    const handleAnswerClicks = () => {
+        setAnswerClicked((prev) => (prev === 0 ? 1 : 0));
+    };
 
     const resetHintsClicks = () => {
-        setHintsClicked(prev => 0);
-    }
+        setHintsClicked((prev) => 0);
+    };
 
     // Set SVG size based on graph size
     const svgSize = 0;
     return (
         <div className="graph-container">
+            <Link to="/">
+                <button className="back-button">Back</button>
+            </Link>
+
             <div className="level-buttons">
                 {["easy", "medium", "hard", "hardcore", "nightmare"].map(
                     (lvl) => (
@@ -332,11 +346,10 @@ const Graph = () => {
                 )}
             </div>
             <p className="color-hint">
-                {minColors+1 === colorsPalette.length 
-                    ? `Feel free to explore and play with all color available at your fingertips!` 
+                {minColors + 1 === colorsPalette.length
+                    ? `Feel free to explore and play with all color available at your fingertips!`
                     : `Use only ${minColors} colors for this Graph.`}
             </p>
-
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
@@ -375,7 +388,11 @@ const Graph = () => {
                 <button onClick={handleSubmit}>Submit</button>
                 <button onClick={handleHints}>Hint</button>
                 <button onClick={handleReset}>Reset</button>
-                {answerClicked ? <button onClick={autoAnswer}>Answer</button>:''}
+                {answerClicked ? (
+                    <button onClick={autoAnswer}>Answer</button>
+                ) : (
+                    ""
+                )}
                 {console.log(hintsClicked)}
             </div>
 
@@ -417,8 +434,8 @@ const Graph = () => {
                         <text
                             x={pos.x}
                             y={pos.y}
-                            fill="black" // You can change the color as needed
-                            fontSize="12" // Adjust the font size as needed
+                            fill="black"
+                            fontSize="12"
                             textAnchor="middle"
                             dominantBaseline="middle"
                             pointerEvents="none"
