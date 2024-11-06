@@ -245,9 +245,9 @@ const Graph = () => {
         let uniqueColors = [];
 
         colors.forEach((color) => {
-            if (color !== null && !uniqueColors.includes(color)) {
+            if ((color !== null && color !== 'white') && !uniqueColors.includes(color)) {
                 uniqueColors.push(color);
-                if(color !== 'white' || color !== null) totalColorUsed += 1;
+                totalColorUsed += 1;
             }
         });
         
