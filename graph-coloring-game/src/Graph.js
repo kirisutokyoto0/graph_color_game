@@ -1,61 +1,77 @@
 import React, { useState } from "react";
 import "./Graph.css";
 
-const colorsPalette = ["red", "blue", "green", "yellow", "orange", "purple", null];
+const colorsPalette = [
+    "#D7263D",
+    "#F46036",
+    "#E56399",
+    "#1B998B",
+    "#C5D86D",
+    null,
+];
 
 // Graph maps for each level
 const graphMaps = {
     easy: [
-        [0, 1, 1, 0, 0, 1, 1],//0
-        [1, 0, 0, 1, 1, 1, 1],//1
-        [1, 0, 0, 1, 0, 1, 1],//2
-        [0, 1, 1, 0, 1, 1, 1],//3
-        [0, 1, 0, 1, 0, 0, 0],//4
-        [1, 1, 1, 1, 0, 0, 1],//5
-        [1, 1, 1, 1, 0, 1, 0],//6
+        [0, 1, 1, 0, 0, 1, 1], //0
+        [1, 0, 0, 1, 1, 1, 1], //1
+        [1, 0, 0, 1, 0, 1, 1], //2
+        [0, 1, 1, 0, 1, 1, 1], //3
+        [0, 1, 0, 1, 0, 0, 0], //4
+        [1, 1, 1, 1, 0, 0, 1], //5
+        [1, 1, 1, 1, 0, 1, 0], //6
     ],
     medium: [
-        //[0, 0, 0, 0, 0, 0, 0, 0], //6
-        [0, 1, 1, 0, 0, 0, 0, 0], //0
-        [1, 0, 1, 1, 0, 0, 0, 0], //1
-        [1, 1, 0, 0, 1, 1, 1, 0], //2
-        [0, 1, 0, 0, 1, 0, 1, 0], //3
-        [0, 0, 1, 1, 0, 1, 0, 0], //4
-        [0, 0, 1, 0, 1, 0, 1, 1], //5
-        [0, 0, 1, 1, 0, 1, 0, 1], //6
-        [0, 0, 0, 0, 0, 1, 1, 0], //7
+        [0, 1, 1, 0, 0, 0, 0, 0, 0], //0
+        [1, 0, 1, 1, 0, 0, 1, 0, 1], //1
+        [1, 1, 0, 0, 1, 1, 1, 0, 0], //2
+        [0, 1, 0, 0, 1, 0, 1, 0, 1], //3
+        [0, 0, 1, 1, 0, 1, 0, 0, 0], //4
+        [0, 0, 1, 0, 1, 0, 1, 1, 0], //5
+        [0, 1, 1, 1, 0, 1, 0, 1, 0], //6
+        [0, 0, 0, 0, 0, 1, 1, 0, 0], //7
+        [0, 1, 0, 1, 0, 0, 0, 0, 0], //8
     ],
     hard: [
-        [0, 1, 0, 1, 0, 0],
-        [1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1],
-        [0, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 0, 0, 0],//0
+        [1, 0, 1, 0, 1, 0, 1, 1, 0, 0],//1
+        [0, 1, 0, 0, 0, 1, 0, 0, 1, 0],//2
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 1],//3
+        [0, 1, 0, 1, 0, 1, 1, 1, 1, 1],//4
+        [1, 0, 1, 0, 1, 0, 0, 0, 1, 0],//5
+        [0, 1, 0, 1, 1, 0, 0, 1, 0, 0],//6
+        [0, 1, 0, 1, 1, 0, 1, 0, 0, 1],//7
+        [0, 0, 1, 1, 1, 1, 0, 0, 0, 1],//8
+        [0, 0, 0, 1, 1, 0, 0, 1, 1, 0],//9
     ],
     hardcore: [
-        [0, 1, 1, 0, 0, 0, 1],
-        [1, 0, 1, 1, 0, 0, 0],
-        [1, 1, 0, 0, 1, 0, 0],
-        [0, 1, 0, 0, 1, 1, 0],
-        [0, 0, 1, 1, 0, 1, 1],
-        [0, 0, 0, 1, 1, 0, 1],
-        [1, 0, 0, 0, 1, 1, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],//0
+        [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],//1
+        [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],//2
+        [0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0],//3
+        [0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0],//4
+        [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0],//5
+        [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0],//6
+        [0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0],//7
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],//8
+        [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],//9
+        [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],//10
     ],
     nightmare: [
-        //0  1  2  3  4  5  6  7  8  9  10 11
-        [0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0], //0
-        [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0], //1
-        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //2
-        [0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1], //3
-        [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0], //4
-        [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], //5
-        [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1], //6
-        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1], //7
-        [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1], //8
-        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0], //9
-        [0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0], //10
-        [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], //11
+       //0  1  2  3  4  5  6  7  8  9  10 11 12
+        [0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0], //0
+        [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0], //1
+        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1], //2
+        [0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0], //3
+        [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1], //4
+        [0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0], //5
+        [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0], //6
+        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0], //7
+        [0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0], //8
+        [1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1], //9
+        [0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0], //10
+        [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0], //11
+        [0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0], //12
     ],
 };
 
@@ -64,43 +80,52 @@ const vertexPositions = (level) => {
     switch (level) {
         case "easy":
             return [
-                { x: 100, y: 100 },
-                { x: 300, y: 100 },
-                { x: 100, y: 300 },
-                { x: 300, y: 300 },
-                { x: 400, y: 200 },
-                { x: 200, y: 200 },
-                { x: 200, y: 400 },
+                { x: 200, y: 100 },
+                { x: 400, y: 100 },
+                { x: 200, y: 300 },
+                { x: 400, y: 300 },
+                { x: 500, y: 200 },
+                { x: 300, y: 200 },
+                { x: 300, y: 400 },
             ];
         case "medium":
             return [
-                { x: 100, y: 100 }, //0
-                { x: 300, y: 100 }, //1
-                { x: 100, y: 350 }, //2
-                { x: 300, y: 350 }, //3
-                { x: 200, y: 350 }, //4
-                { x: 150, y: 170 }, //5
-                { x: 245, y: 280 }, //6
-                { x: 400, y: 225 }, //7
+                { x: 150, y: 100 }, //0
+                { x: 350, y: 100 }, //1
+                { x: 150, y: 350 }, //2
+                { x: 350, y: 350 }, //3
+                { x: 250, y: 350 }, //4
+                { x: 200, y: 170 }, //5
+                { x: 295, y: 280 }, //6
+                { x: 450, y: 225 }, //7
+                { x: 550, y: 225 }, //8
             ];
         case "hard":
             return [
-                { x: 100, y: 100 },
-                { x: 300, y: 100 },
-                { x: 100, y: 300 },
-                { x: 300, y: 300 },
-                { x: 300, y: 200 },
-                { x: 100, y: 200 },
+                { x: 150, y: 80 },//0
+                { x: 350, y: 80 },//1
+                { x: 150, y: 280 },//2
+                { x: 350, y: 280 },//3
+                { x: 350, y: 180 },//4
+                { x: 150, y: 180 },//5
+                { x: 450, y: 130 },//6
+                { x: 450, y: 230 },//7
+                { x: 250, y: 380 },//8
+                { x: 550, y: 380 },//9
             ];
         case "hardcore":
             return [
-                { x: 150, y: 100 },
-                { x: 300, y: 100 },
-                { x: 150, y: 300 },
-                { x: 300, y: 300 },
-                { x: 400, y: 100 },
-                { x: 400, y: 300 },
-                { x: 500, y: 200 },
+                { x: 120, y: 90 },//0
+                { x: 320, y: 90 },//1
+                { x: 170, y: 290 },//2
+                { x: 320, y: 290 },//3
+                { x: 420, y: 90 },//4
+                { x: 420, y: 290 },//5
+                { x: 520, y: 190 },//6
+                { x: 245, y: 440 },//7
+                { x: 470, y: 440 },//8
+                { x: 520, y: 70 },//9
+                { x: 190, y: 160 },//10
             ];
         case "nightmare":
             return [
@@ -112,10 +137,11 @@ const vertexPositions = (level) => {
                 { x: 400, y: 100 }, //5
                 { x: 500, y: 200 }, //6
                 { x: 600, y: 400 }, //7
-                { x: 500, y: 400 }, //8
+                { x: 480, y: 400 }, //8
                 { x: 250, y: 210 }, //9
                 { x: 400, y: 470 }, //10
                 { x: 600, y: 270 }, //11
+                { x: 100, y: 400 }, //11
             ];
         default:
             return [];
@@ -128,6 +154,8 @@ const Graph = () => {
     const [colors, setColors] = useState(Array(graph.length).fill(null));
     const [result, setResult] = useState("");
     const [selectedColor, setSelectedColor] = useState(null);
+    const [hintsClicked, setHintsClicked] = useState(0); 
+    const [answerClicked, setAnswerClicked] = useState(0); 
     const minColors = calculateMinColors(graph);
 
     const handleReset = () => {
@@ -160,10 +188,10 @@ const Graph = () => {
         let uniqueColors = [];
 
         colors.forEach((color) => {
-            if (color === null) colorisNULL = true;
-            if (color !== null && !uniqueColors.includes(color)) {``
+            if (color === null || color === 'white') colorisNULL = true;
+            if (color !== null && !uniqueColors.includes(color)) {
                 uniqueColors.push(color);
-                totalColorUsed += 1;
+                if(color !== 'white') totalColorUsed += 1;
             }
         });
         //If the player only uses the minimum number of colors
@@ -184,14 +212,51 @@ const Graph = () => {
     };
 
     const autoAnswer = () => {
+        handleAnswerClicks();
         const autoColors = Array(graph.length).fill(null);
         if (colorGraph(autoColors, 0)) {
             setColors(autoColors);
-            setResult("The graph has been auto-colored!");
+            setResult("This is just one of many possible answers.");
         } else {
             setResult("No valid coloring found.");
         }
     };
+
+    const handleHints = () => {
+        if (hintsClicked === 2){
+            handleAnswerClicks();
+            resetHintsClicks();
+        }
+
+        let conflicts = new Set();
+        let allNull = 0;
+        for (let i = 0; i < graph.length; i++) {
+            if(colors[i] === 'white' || colors[i] === null) allNull+=1;
+            for (let j = i + 1; j < graph.length; j++) {
+                // Start from i+1 to avoid redundant checks
+                if (graph[i][j] === 1 && colors[i] === colors[j] && (colors[i] !== null && colors[i] !== 'white')) {
+                    conflicts.add(i);
+                    conflicts.add(j); 
+                }
+            }
+        }
+    
+        // Convert Set to array to sort and display unique conflicts only
+        let conflictingVertices = Array.from(conflicts).sort();
+        if(allNull === graph.length){
+            setResult(`You haven't started yet.`);
+        }
+        else if (conflictingVertices.length) {
+            setResult(`You have a mistake at vertices: ${conflictingVertices.join(', ')}`);
+            handleHintsClicks();
+        } else {
+            setResult(`You are on the right track!`);
+        }
+    };
+    
+    
+
+
 
     const colorGraph = (autoColors, vertexIndex) => {
         if (vertexIndex === graph.length) {
@@ -221,10 +286,21 @@ const Graph = () => {
         }
         return true;
     };
+    const handleHintsClicks = () => {
+        setHintsClicked(prev => prev + 1); // Increment the hintsClicked counter
+        // Your logic for hints here
+    };
+
+    const handleAnswerClicks = () =>{
+        setAnswerClicked(prev => prev === 0? 1:0);
+    }
+
+    const resetHintsClicks = () => {
+        setHintsClicked(prev => 0);
+    }
 
     // Set SVG size based on graph size
     const svgSize = 0;
-
     return (
         <div className="graph-container">
             <div className="level-buttons">
@@ -240,37 +316,51 @@ const Graph = () => {
                     )
                 )}
             </div>
-            <p>Use [{minColors}] color's only</p>
+            <p className="color-hint">
+                {minColors+1 === colorsPalette.length 
+                    ? `Feel free to explore and play with all color available at your fingertips!` 
+                    : `Use only ${minColors} colors for this Graph.`}
+            </p>
+
 
             <div className="color-palette">
                 {colorsPalette.map((color) => (
-                <div
-                    key={color || 'clear'}
-                    className="color-swatch"
-                    style={{ backgroundColor: color ? color : 'white', position: 'relative' }}
-                    onClick={() => setSelectedColor(color || 'white')}
-                >
-                    {!color && (
-                        <span style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000',
-                            fontWeight: 'bold'
-                        }}>
-                            X
-                        </span>
-                    )}
-                </div>
-
+                    <div
+                        key={color || "clear"}
+                        className={`color-swatch ${
+                            selectedColor === color ? "selected" : ""
+                        }`}
+                        style={{
+                            backgroundColor: color ? color : "white",
+                            position: "relative",
+                        }}
+                        onClick={() => setSelectedColor(color || "white")}
+                    >
+                        {!color && (
+                            <span
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    color: "#000",
+                                    fontWeight: "bold",
+                                    userSelect: "none",
+                                    pointerEvents: "none",
+                                }}
+                            >
+                                X
+                            </span>
+                        )}
+                    </div>
                 ))}
             </div>
 
             <div className="action-buttons">
                 <button onClick={handleSubmit}>Submit</button>
-                <button onClick={autoAnswer}>Answer</button>
+                <button onClick={handleHints}>Hint</button>
                 <button onClick={handleReset}>Reset</button>
+                {answerClicked ? <button onClick={autoAnswer}>Answer</button>:''}
             </div>
 
             {result && <h3>{result}</h3>}
@@ -368,7 +458,5 @@ const isValidColoring = (graph, colors) => {
 
     return true; // No conflicts found
 };
-
-
 
 export default Graph;
