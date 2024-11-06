@@ -254,7 +254,6 @@ const Graph = () => {
         }
     };
     
-    
 
 
 
@@ -286,9 +285,9 @@ const Graph = () => {
         }
         return true;
     };
+
     const handleHintsClicks = () => {
         setHintsClicked(prev => prev + 1); // Increment the hintsClicked counter
-        // Your logic for hints here
     };
 
     const handleAnswerClicks = () =>{
