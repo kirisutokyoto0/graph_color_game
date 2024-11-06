@@ -138,8 +138,7 @@ footer {
 .color-palette {
   display: flex;
   justify-content: center;
-  padding: 10px;
-  margin: 20px 0;
+  margin: 10px;
 }
 
 .color-swatch {
@@ -236,3 +235,13 @@ svg {
   width: 650px;
   margin-top: 10px;
 }
+
+
+.color-hint {
+  margin: 10px;
+}
+
+.action-buttons {
+  margin: 10px;
+}
+
