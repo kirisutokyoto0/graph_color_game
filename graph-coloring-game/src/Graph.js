@@ -20,13 +20,6 @@ const graphMaps = {
         [0, 1, 0, 1, 0, 0, 0], //4
         [1, 1, 1, 1, 0, 0, 1], //5
         [1, 1, 1, 1, 0, 1, 0], //6
-        [0, 1, 1, 0, 0, 1, 1], //0
-        [1, 0, 0, 1, 1, 1, 1], //1
-        [1, 0, 0, 1, 0, 1, 1], //2
-        [0, 1, 1, 0, 1, 1, 1], //3
-        [0, 1, 0, 1, 0, 0, 0], //4
-        [1, 1, 1, 1, 0, 0, 1], //5
-        [1, 1, 1, 1, 0, 1, 0], //6
     ],
     medium: [
         [0, 1, 1, 0, 0, 0, 0, 0, 0], //0
@@ -242,8 +235,8 @@ const Graph = () => {
             for (let j = i + 1; j < graph.length; j++) {
                 // Start from i+1 to avoid redundant checks
                 if (graph[i][j] === 1 && colors[i] === colors[j] && (colors[i] !== null && colors[i] !== 'white')) {
-                    conflicts.add(i);
-                    conflicts.add(j); 
+                    conflicts.add(i); // Add only the index of the conflicting vertex
+                    conflicts.add(j); // Add the other index of the conflicting vertex
                 }
             }
         }
@@ -260,6 +253,7 @@ const Graph = () => {
             setResult(`You are on the right track!`);
         }
     };
+    
     
 
 
@@ -292,9 +286,9 @@ const Graph = () => {
         }
         return true;
     };
-
     const handleHintsClicks = () => {
         setHintsClicked(prev => prev + 1); // Increment the hintsClicked counter
+        // Your logic for hints here
     };
 
     const handleAnswerClicks = () =>{
@@ -359,34 +353,6 @@ const Graph = () => {
                             </span>
                         )}
                     </div>
-                    <div
-                        key={color || "clear"}
-                        className={`color-swatch ${
-                            selectedColor === color ? "selected" : ""
-                        }`}
-                        style={{
-                            backgroundColor: color ? color : "white",
-                            position: "relative",
-                        }}
-                        onClick={() => setSelectedColor(color || "white")}
-                    >
-                        {!color && (
-                            <span
-                                style={{
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    color: "#000",
-                                    fontWeight: "bold",
-                                    userSelect: "none",
-                                    pointerEvents: "none",
-                                }}
-                            >
-                                X
-                            </span>
-                        )}
-                    </div>
                 ))}
             </div>
 
@@ -395,6 +361,7 @@ const Graph = () => {
                 <button onClick={handleHints}>Hint</button>
                 <button onClick={handleReset}>Reset</button>
                 {answerClicked ? <button onClick={autoAnswer}>Answer</button>:''}
+                {console.log(hintsClicked)}
             </div>
 
             {result && <h3>{result}</h3>}
