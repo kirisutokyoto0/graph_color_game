@@ -193,7 +193,7 @@ const Graph = () => {
             {
                 colorisNULL = true;
             }
-            
+
             if (color !== null && 
                 !uniqueColors.includes(color)) 
             {
@@ -204,7 +204,7 @@ const Graph = () => {
 
         //check if the player only uses the minimum number of colors
         if (totalColorUsed > calculateMinColors(graph)) {
-            setResult(`Please use only ${calculateMinColors(graph)} colors`);
+            setResult(`You can only use ${calculateMinColors(graph)} colors maximum on this level`);
         } else if (colorisNULL) {
             //Check if the player didn't color all the vertices
             setResult(`Please fill in all the vertices with color.`);
@@ -352,7 +352,7 @@ const Graph = () => {
             <p className="color-hint">
                 {minColors + 1 === colorsPalette.length
                     ? `Feel free to explore and play with all color available at your fingertips!`
-                    : `Use only ${minColors} colors for this Graph.`}
+                    : `You can use no more than ${minColors} colors for this level.`}
             </p>
 
             <div className="color-palette">
