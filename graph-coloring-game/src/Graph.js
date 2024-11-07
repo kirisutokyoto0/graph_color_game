@@ -183,26 +183,30 @@ const Graph = () => {
     };
 
     const handleSubmit = () => {
-        //Check if the player uses only the minimum number of color
-        let colorisNULL = false;
+        let colorisNULL = false;//if the player didn't colored at least 1 vertex
         let uniqueColors = [];
         let totalColorUsed = 0;
 
         colors.forEach((color) => {
-            if (
-                color !== null &&
-                color !== "white" &&
-                !uniqueColors.includes(color)
-            ) {
+            if (color === null || 
+                color === 'white')
+            {
+                colorisNULL = true;
+            }
+            
+            if (color !== null && 
+                !uniqueColors.includes(color)) 
+            {
                 uniqueColors.push(color);
-                totalColorUsed += 1;
+                totalColorUsed += (color !== 'white') ? 1:0;
             }
         });
-        //If the player only uses the minimum number of colors
+
+        //check if the player only uses the minimum number of colors
         if (totalColorUsed > calculateMinColors(graph)) {
             setResult(`Please use only ${calculateMinColors(graph)} colors`);
         } else if (colorisNULL) {
-            //if the player didn't color all the vertices
+            //Check if the player didn't color all the vertices
             setResult(`Please fill in all the vertices with color.`);
         } else if (isValidColoring(graph, colors)) {
             //is the player did correctly colored all the vertices
