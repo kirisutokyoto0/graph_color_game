@@ -160,11 +160,23 @@ const Graph = () => {
     const minColors = calculateMinColors(graph);
 
     const handleReset = () => {
+        let nullColors = 0;
         setColors(Array(graph.length).fill(null));
-        setResult("");
+        colors.forEach(color =>{
+            if(color === null || color === 'white') nullColors +=1;
+        });
+
+        if(nullColors === graph.length){
+            setResult("The board is already cleared!");
+        }
+        else{
+            setResult("The board is cleared, Let the game begin!");
+        }
     };
 
     const handleLevelChange = (newLevel) => {
+        setAnswerClicked(0);//Remove the auto answer if player choose new level
+        setHintsClicked(0);//Reset hints clicked
         setLevel(newLevel);
         const newGraph = graphMaps[newLevel];
         setGraph(newGraph);
@@ -182,45 +194,55 @@ const Graph = () => {
         setColors(newColors);
     };
 
+
     const handleSubmit = () => {
-        let colorisNULL = false;//if the player didn't colored at least 1 vertex
-        let uniqueColors = [];
-        let totalColorUsed = 0;
-
+        const {hasUncoloredVertices, totalColorUsed } = processColors(colors);
+    
+        // Check if the player used more than the allowed number of colors
+        if (totalColorUsed > calculateMinColors(graph)) {
+            setResult(`You can only use ${calculateMinColors(graph)} colors maximum on this level.`);
+            return;
+        }
+    
+        // Check if the player didn't color all vertices
+        if (hasUncoloredVertices) {
+            setResult('Please fill in all the vertices with color.');
+            return;
+        }
+    
+        // Check if the player colored the graph correctly
+        if (isValidColoring(graph, colors)) {
+            setResult('Correct! You colored the graph properly.');
+            return;
+        }
+    
+        // If none of the above, coloring is incorrect
+        setResult('Wrong! Adjacent vertices share the same color.');
+    };
+    
+    // Helper function to process the colors
+    const processColors = (colors) => {
+        let hasUncoloredVertices = false; // Flag to track if any vertex is uncolored
+        let uniqueColors = [];   // Array to store unique colors
+        let totalColorUsed = 0;  // Counter for the number of valid colors used
+    
         colors.forEach((color) => {
-            if (color === null || 
-                color === 'white')
-            {
-                colorisNULL = true;
+            if (color === null || color === 'white') {
+                hasUncoloredVertices = true; // Found an uncolored vertex
             }
-
-            if (color !== null && 
-                !uniqueColors.includes(color)) 
-            {
-                uniqueColors.push(color);
-                totalColorUsed += (color !== 'white') ? 1:0;
+    
+            if (color !== null && !uniqueColors.includes(color)) {
+                uniqueColors.push(color); // Add the unique color to the array
+                totalColorUsed += (color !== 'white') ? 1 : 0; // Only count non-white colors
             }
         });
-
-        //check if the player only uses the minimum number of colors
-        if (totalColorUsed > calculateMinColors(graph)) {
-            setResult(`You can only use ${calculateMinColors(graph)} colors maximum on this level`);
-        } else if (colorisNULL) {
-            //Check if the player didn't color all the vertices
-            setResult(`Please fill in all the vertices with color.`);
-        } else if (isValidColoring(graph, colors)) {
-            //is the player did correctly colored all the vertices
-            setResult("Correct! You colored the graph properly.");
-        } else {
-            setResult(
-                `Wrong! Adjacent vertices 
-                  share the same color was found.`
-            );
-        }
+    
+        return {hasUncoloredVertices, totalColorUsed};
     };
+    
 
     const autoAnswer = () => {
-        handleAnswerClicks();
+        handleAnswerClicks();//Reset after use
         const autoColors = Array(graph.length).fill(null);
         if (colorGraph(autoColors, 0)) {
             setColors(autoColors);
@@ -231,101 +253,141 @@ const Graph = () => {
     };
 
     const handleHints = () => {
+        // Check if hints should be reset
         if (hintsClicked === 2) {
             handleAnswerClicks();
-            resetHintsClicks();
         }
+    
+        // Process conflicts and color usage
+        const { conflicts, allNull, totalColorUsed } = processColorsAndConflicts();
+    
+        // Display the result based on the conditions
+        setResultMessage(conflicts, allNull, totalColorUsed);
+    };
+    
+    // Helper function to process color conflicts and color usage
+    const processColorsAndConflicts = () => {
+        let conflicts = new Set(); // To store vertices that have color conflicts (edges with same color)
+        let allNull = 0;  // Counter to track how many vertices are not yet colored (i.e., color is null or "white")
+        let totalColorUsed = 0;  // To count how many distinct colors are used in the graph
+        let uniqueColors = []; // Array to keep track of unique colors used in the coloring
 
-        let conflicts = new Set();
-        let allNull = 0;
+        // Loop through each vertex in the graph to check for color conflicts and count uncolored vertices
         for (let i = 0; i < graph.length; i++) {
+            // If the current vertex is uncolored (either "white" or null), increment the allNull counter
             if (colors[i] === "white" || colors[i] === null) allNull += 1;
+
+            // Check for conflicts with other vertices that are connected (i.e., have an edge between them)
             for (let j = i + 1; j < graph.length; j++) {
-                // Start from i+1 to avoid redundant checks
+                // Check if there is an edge between vertex `i` and vertex `j`
+                // and if both vertices have the same color (and neither of them is uncolored)
                 if (
-                    graph[i][j] === 1 &&
-                    colors[i] === colors[j] &&
-                    colors[i] !== null &&
-                    colors[i] !== "white"
+                    graph[i][j] === 1 &&  // There is an edge between vertex `i` and vertex `j`
+                    colors[i] === colors[j] &&  // Both vertices have the same color
+                    colors[i] !== null && colors[i] !== "white"  // Both vertices are colored (not null or "white")
                 ) {
-                    conflicts.add(i); // Add only the index of the conflicting vertex
-                    conflicts.add(j); // Add the other index of the conflicting vertex
+                    conflicts.add(i); // Add vertex `i` to the conflicts set
+                    conflicts.add(j); // Add vertex `j` to the conflicts set
                 }
             }
         }
 
-        let totalColorUsed = 0;
-        let uniqueColors = [];
-
+        // Iterate through the colors array to count how many distinct colors are used
         colors.forEach((color) => {
-            if ((color !== null && color !== 'white') && !uniqueColors.includes(color)) {
-                uniqueColors.push(color);
-                totalColorUsed += 1;
+            // Check if the color is not null or "white" and if it hasn't been counted already
+            if (color !== null && color !== 'white' && !uniqueColors.includes(color)) {
+                uniqueColors.push(color); // Add the color to the list of unique colors
+                totalColorUsed += 1;  // Increment the counter for the total number of colors used
             }
         });
 
-        // Convert Set to array to sort and display unique conflicts only
-        let conflictingVertices = Array.from(conflicts).sort();
+        // Return an object containing the processed data
+        return {conflicts, allNull, totalColorUsed};
+    };
+
+    
+    // Helper function to set the result message based on conditions
+    const setResultMessage = (conflicts, allNull, totalColorUsed) => {
+        // Check if no vertices have been colored yet
         if (allNull === graph.length) {
             setResult(`You haven't started yet.`);
-        } else if (conflictingVertices.length) {
+        }
+        // Check if there are conflicts in the coloring
+        else if (conflicts.size > 0) {
+            let conflictingVertices = Array.from(conflicts).sort();
+            setResult(`You have a mistake at vertices: ${conflictingVertices.join(", ")}`);
+            handleHintsClicks();
+        }
+        // Check if the player has exceeded the maximum number of colors
+        else if (totalColorUsed > calculateMinColors(graph)) {
             setResult(
-                `You have a mistake at vertices: ${conflictingVertices.join(
-                    ", "
-                )}`
+                `You have used ${totalColorUsed} colors, exceeding the maximum limit of ${calculateMinColors(graph)} colors.`
             );
             handleHintsClicks();
-        } else if (totalColorUsed > calculateMinColors(graph)) {
-            setResult(
-                `You have used ${totalColorUsed} colors, exceeding the maximum limit of ${calculateMinColors(
-                    graph
-                )} colors.`
-            );
-            handleHintsClicks();
-        } else {
+        }
+        // Otherwise, the coloring is correct
+        else {
             setResult(`You are on the right track!`);
         }
     };
+    
 
     const colorGraph = (autoColors, vertexIndex) => {
+        // Base case: If all vertices are processed, the graph is successfully colored.
         if (vertexIndex === graph.length) {
             return true;
         }
 
-        for (let color of colorsPalette) {
+        for (let color of colorsPalette) {  // Iterate over each color in the color palette
+            // Check if it's safe to assign the current color to vertex `vertexIndex`
+            // The isSafe function will ensure no adjacent vertex has the same color
             if (isSafe(autoColors, graph, vertexIndex, color)) {
-                autoColors[vertexIndex] = color;
-
+                
+                autoColors[vertexIndex] = color;  // Assign the current color to the current vertex
+        
+                // Recursively try to color the next vertex (vertexIndex + 1)
                 if (colorGraph(autoColors, vertexIndex + 1)) {
-                    return true;
+                    return true;  // If successfully colored the next vertex, return true (successful solution)
                 }
-
+        
+                // Backtrack: If coloring the next vertex fails, undo the color assignment for the current vertex
                 autoColors[vertexIndex] = null;
             }
         }
 
+        // If no color can be assigned to the current vertex that leads to a solution, return false.
         return false;
     };
 
     const isSafe = (autoColors, graph, vertexIndex, color) => {
+        // Iterate over all vertices to check if any adjacent vertex has the same color
         for (let j = 0; j < graph.length; j++) {
+            // If vertex `j` is adjacent to vertex `vertexIndex` and already has the same color
+            // (graph[vertexIndex][j] === 1 indicates adjacency between vertexIndex and vertex j)
+            // and the color of vertex j is the same as the color we want to assign to vertexIndex,
+            // then it's not safe to assign this color to vertex `vertexIndex`.
             if (graph[vertexIndex][j] === 1 && autoColors[j] === color) {
-                return false;
+                return false; // Return false since assigning this color would violate the graph coloring rule.
             }
         }
+        // If no adjacent vertex has the same color, it is safe to assign the color.
         return true;
     };
+
+
     const handleHintsClicks = () => {
-        setHintsClicked((prev) => prev + 1); // Increment the hintsClicked counter
-        // Your logic for hints here
+        if(hintsClicked < 2){
+            setHintsClicked((prev) => prev + 1); // Increment the hintsClicked counter
+        }else{
+            setHintsClicked((prev) => 0);// Reset it to 0
+        }
     };
 
     const handleAnswerClicks = () => {
+        //If the Auto answer was clicked call colorGraph function 
+        //reset answerClicked to 0
+        //So the answer button will disappear after the player use it
         setAnswerClicked((prev) => (prev === 0 ? 1 : 0));
-    };
-
-    const resetHintsClicks = () => {
-        setHintsClicked((prev) => 0);
     };
 
     // Set SVG size based on graph size
@@ -397,7 +459,6 @@ const Graph = () => {
                 ) : (
                     ""
                 )}
-                {console.log(hintsClicked)}
             </div>
 
             {result && <h3>{result}</h3>}
